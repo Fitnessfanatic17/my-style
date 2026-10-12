@@ -156,12 +156,12 @@
             } else if (mode === 'fireworks') {
                 spawnFireworks();
             } else if (mode === 'money') {
-                spawnWave('money', 80, 2000);
+                spawnWave('money', 350, 2500); // Massively increased to fill the screen
             } else if (mode === 'praise') {
                 praiseSound.currentTime = 0;
                 praiseSound.play().catch(err => console.log("Audio blocked: ", err));
             } else if (mode === 'gold') {
-                spawnWave('gold', 100, 2000);
+                spawnWave('gold', 350, 2500); // Massively increased to fill the screen
             }
         }
 
@@ -194,7 +194,6 @@
                 let vy = Math.random() * 3 + 2;
 
                 if (type === 'gold') {
-                    // Removed diamonds, keeping only gold and silver coins
                     const subTypes = ['gold_coin', 'silver_coin'];
                     let subType = subTypes[Math.floor(Math.random() * subTypes.length)];
                     particles.push(new Particle(x, y, vx, vy, subType));
@@ -209,14 +208,19 @@
         }
 
         function spawnFireworks() {
-            let numRockets = 15; // Increased amount
+            let numRockets = 35; // Massively increased for a full-screen barrage
             for(let j = 0; j < numRockets; j++) {
-                // Distribute rockets evenly across the entire width of the screen
-                let x = (canvas.width / numRockets) * j + (Math.random() * 40 - 20); 
-                let y = canvas.height;
-                let targetY = Math.random() * (canvas.height * 0.5) + 50;
-                let vx = (Math.random() - 0.5) * 2;
-                let vy = -(Math.random() * 5 + 14);
+                // Scatter launch points completely across the screen width
+                let x = Math.random() * canvas.width; 
+                let y = canvas.height + (Math.random() * 100); 
+                
+                // Target heights scattered from the very top (5%) down to the bottom (90%)
+                let targetY = Math.random() * (canvas.height * 0.85) + (canvas.height * 0.05);
+                
+                // Give them varied horizontal and vertical launch velocities
+                let vx = (Math.random() - 0.5) * 5;
+                let vy = -(Math.random() * 10 + 12);
+                
                 particles.push(new Particle(x, y, vx, vy, 'firework_rocket', targetY));
             }
         }
@@ -270,6 +274,7 @@
 
                 if (this.type === 'firework_rocket') {
                     this.vy += 0.15; 
+                    // Explode if it reaches its target height or starts falling
                     if (this.vy >= 0 || this.y <= this.targetY) {
                         this.life = 0;
                         this.explode();
@@ -381,7 +386,9 @@
                     let faceColor = isGold ? '#FFCA28' : '#ECEFF1';
                     let edgeColor = isGold ? '#E65100' : '#455A64'; 
                     let symbolColor = isGold ? '#E65100' : '#455A64';
-                    let symbol = isGold ? '$' : '¢';
+                    
+                    // Both gold and silver coins now use the dollar symbol
+                    let symbol = '$';
 
                     let thickness = 4;
                     let yDir = Math.sin(this.spinX) > 0 ? 1 : -1;
