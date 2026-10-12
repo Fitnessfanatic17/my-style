@@ -402,4 +402,57 @@
                         ctx.fill();
                     }
 
-                    let faceYOffset = thickness * yDir * (
+                    let faceYOffset = thickness * yDir * (1 - scaleY);
+                    ctx.fillStyle = faceColor;
+                    ctx.beginPath();
+                    ctx.ellipse(0, faceYOffset, this.size, this.size * scaleY, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    
+                    ctx.strokeStyle = edgeColor;
+                    ctx.lineWidth = 2.5; 
+                    ctx.stroke();
+
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.ellipse(0, faceYOffset, this.size * 0.65, this.size * 0.65 * scaleY, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    ctx.fillStyle = symbolColor;
+                    ctx.font = `bold ${this.size * 1.1}px Arial`;
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.scale(1, scaleY); 
+                    ctx.fillText(symbol, 0, faceYOffset / scaleY + 1);
+
+                    ctx.restore();
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            for (let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.update();
+                p.draw(ctx);
+                
+                if (p.life <= 0 || p.y > canvas.height + 50) {
+                    particles.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+    
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js');
+            });
+        }
+    </script>
+</body>
+</html>
