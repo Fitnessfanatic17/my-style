@@ -1,6 +1,6 @@
 {
-  "name": "Interactive Particles",
-  "short_name": "Particles",
+  "name": "WIN",
+  "short_name": "WIN",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
